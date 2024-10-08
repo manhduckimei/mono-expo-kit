@@ -1,0 +1,55 @@
+import { RootScenes } from './root-scenes'
+import { ModalContainer } from '@components'
+import { navigationRef } from '@navigation/config/navigation-service'
+import NavigationContainer from '@react-navigation/native/src/NavigationContainer'
+import { navigationTheme } from '@theme'
+import { Image } from 'expo-image'
+import * as SplashScreen from 'expo-splash-screen'
+import { useEffect } from 'react'
+import { AppState } from 'react-native'
+
+export function screenTracking(state: NavigationState | undefined): void {
+  if (state) {
+    const route = state?.routes[state.index]
+    if (route.state) return screenTracking(route?.state as NavigationState)
+
+    return console.log(`====== NAVIGATING to > ${route?.name}`)
+  }
+}
+
+SplashScreen.preventAutoHideAsync().catch(() => {})
+
+const MainNavigation = () => {
+  useEffect(() => {
+    // a memory warning listener for free up FastImage Cache
+    const memoryWarningSubscription = AppState.addEventListener(
+      'memoryWarning',
+      () => {
+        async function clearFastImageMemory() {
+          try {
+            await Image.clearMemoryCache()
+            console.log('did receive memory warning and cleared')
+          } catch {
+            // ignore
+          }
+        }
+        clearFastImageMemory()
+      }
+    )
+    return () => {
+      memoryWarningSubscription.remove()
+    }
+  }, [])
+
+  return (
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={screenTracking}
+      theme={navigationTheme}>
+      <RootScenes />
+      <ModalContainer />
+    </NavigationContainer>
+  )
+}
+
+export default MainNavigation

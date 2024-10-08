@@ -1,0 +1,76 @@
+import { ROUTES } from './routes'
+import type { RootStackRoutes, RouteNames } from './types'
+import {
+  CommonActions,
+  DrawerActions,
+  StackActions,
+  createNavigationContainerRef
+} from '@react-navigation/native'
+
+export const navigationRef = createNavigationContainerRef<RootStackRoutes>()
+
+export function navigate(
+  name: RouteNames,
+  params?: RootStackRoutes[RouteNames]
+) {
+  if (navigationRef.isReady())
+    navigationRef.current.dispatch(CommonActions.navigate(name, params))
+}
+
+export function goBack() {
+  if (navigationRef.current?.canGoBack()) navigationRef.current?.goBack()
+  else navigateAndReset([{ name: ROUTES.Signin }], 0)
+}
+
+export function navigateAndReset(
+  routes: {
+    name: string
+    params?: RootStackRoutes[RouteNames]
+  }[],
+  index: number
+) {
+  navigationRef.current?.dispatch(
+    CommonActions.reset({
+      index,
+      routes
+    })
+  )
+}
+
+export function push(name: RouteNames, params?: RootStackRoutes[RouteNames]) {
+  navigationRef.current?.dispatch(StackActions.push(name, params))
+}
+
+export function replace(
+  name: RouteNames,
+  params?: RootStackRoutes[RouteNames]
+) {
+  navigationRef.current?.dispatch(StackActions.replace(name, params))
+}
+
+export function popToTop() {
+  navigationRef.current?.dispatch(StackActions.popToTop())
+}
+
+export function pop(count?: number) {
+  navigationRef.current?.dispatch(StackActions.pop(count))
+}
+
+export function closeDrawer() {
+  navigationRef.current?.dispatch(DrawerActions.closeDrawer())
+}
+
+export function openDrawer() {
+  navigationRef.current?.dispatch(DrawerActions.openDrawer())
+}
+
+export default {
+  navigate,
+  push,
+  replace,
+  pop,
+  popToTop,
+  closeDrawer,
+  openDrawer,
+  navigationRef
+}

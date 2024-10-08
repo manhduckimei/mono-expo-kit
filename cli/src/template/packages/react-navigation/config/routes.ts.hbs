@@ -1,0 +1,39 @@
+import { createEnum } from './type'
+
+/**
+/**
+ * Routes for screens
+ */
+export const ROUTES = createEnum({
+  //Auth Rotues
+  Signin: 'Signin',
+
+  //Home Routes
+  Home: 'Home'
+})
+
+/**
+  /**
+   * Common screens
+   */
+export const commonScreens = {
+  BottomTab: null
+}
+
+/**
+ * Screens when user logged in
+ */
+export const userScreens = {}
+
+/**
+ * Screens user when user not logged in
+ *
+ */
+export const notLoggedInScreens = {
+  Signin: null
+}
+
+/**
+ * Bottom Tab
+ */
+export const bottomTabScreens = [{ component: null, name: ROUTES.Home }]

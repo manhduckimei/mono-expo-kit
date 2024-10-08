@@ -1,0 +1,29 @@
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".vercel/**", "dist/**"],
+      "cache": true,
+      "env": []
+    },
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
+    "//#format": {
+      "outputs": ["node_modules/.cache/prettiercache"],
+      "outputLogs": "errors-only"
+    },
+    "format": {
+      "dependsOn": ["^topo"],
+      "outputs": ["node_modules/.cache/prettiercache"],
+      "outputLogs": "errors-only"
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

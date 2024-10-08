@@ -1,0 +1,108 @@
+/* eslint-disable max-len */
+import { ExpoConfig } from '@expo/config-types'
+
+import pkg from './package.json'
+
+const SCHEME = process.env.EXPO_PUBLIC_SCHEME ?? '{{props.projectName}}'
+const STAGE = process.env.NODE_ENV ?? 'development'
+process.env.NODE_ENV = STAGE
+const VERSION = pkg.version
+
+const originalLog = console.log
+console.log = () => {}
+
+type EnvConfig = {
+  [key: string]: {
+    name: string
+    scheme: string
+    icon: string
+    foregroundImage: string
+    backgroundImage?: string
+  }
+}
+
+const envConfig: EnvConfig = {
+  development: {
+    name: '{{projectName}} Dev',
+    scheme: SCHEME,
+    icon: './src/assets/icon.png',
+    foregroundImage: './src/assets/adaptive-icon.png',
+    // backgroundImage: './src/assets/icon-android-background.png'
+  },
+  staging: {
+    name: '{{projectName}} Stg',
+    scheme: `${SCHEME}.stg`,
+    icon: './src/assets/icon.png',
+    foregroundImage: './src/assets/adaptive-icon.png',
+    // backgroundImage: './src/assets/icon-android-background.png'
+  },
+  production: {
+    name: '{{projectName}}',
+    scheme: SCHEME,
+    icon: './src/assets/icon.png',
+    foregroundImage: './src/assets/adaptive-icon.png',
+    // backgroundImage: './src/assets/icon-android-background.png'
+  }
+}
+const config = envConfig[STAGE]
+
+console.log = originalLog
+
+const expoConfig: ExpoConfig = {
+  name: config.name,
+  description: '',
+  slug: '{{props.projectName}}',
+  scheme: config.scheme,
+  owner: '',
+  icon: config.icon,
+  version: VERSION,
+  userInterfaceStyle: 'automatic',
+  ios: {
+    bundleIdentifier: config.scheme,
+    supportsTablet: true,
+    jsEngine: 'hermes',
+    config: {
+      usesNonExemptEncryption: false
+    },
+    bitcode: false, // or "Debug",
+    splash: {
+      image: './src/assets/splash.png',
+      resizeMode: 'cover'
+    },
+    infoPlist: {
+      CADisableMinimumFrameDurationOnPhone: true,
+      UIViewControllerBasedStatusBarAppearance: false,
+      UISupportedInterfaceOrientations: ['UIInterfaceOrientationPortrait'],
+    }
+  },
+  android: {
+    icon: config.icon,
+    package: config.scheme,
+    splash: {
+      image: './src/assets/splash.png',
+      resizeMode: 'cover'
+    },
+    adaptiveIcon: {
+      foregroundImage: config.foregroundImage,
+      // backgroundImage: config.backgroundImage
+      // monochromeImage: './assets/mono-icon.png',
+    },
+    ],
+    jsEngine: 'hermes',
+    softwareKeyboardLayoutMode: 'resize'
+    // googleServicesFile: STAGE === 'production' ? './google-services.json' : '',
+  },
+  androidStatusBar: {
+    backgroundColor: '#12121212',
+    barStyle: 'light-content'
+  },
+  assetBundlePatterns: ['**/*'],
+  orientation: 'portrait',
+  runtimeVersion: {
+    policy: 'appVersion'
+  },
+  extra: {
+    STAGE: STAGE,
+  }
+}
+export default expoConfig

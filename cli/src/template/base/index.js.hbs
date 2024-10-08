@@ -1,0 +1,29 @@
+import { Text, TextInput, LogBox } from 'react-native'
+
+import { registerRootComponent } from 'expo'
+import 'expo-dev-client'
+import 'react-native-gesture-handler'
+import 'react-native-reanimated'
+{{#if (eq props.navigationPackage.type "navigation")}}
+import { enableFreeze, enableScreens } from 'react-native-screens'
+{{/if}}
+
+import App from './src/App'
+
+{{#if (eq props.navigationPackage.type "navigation")}}
+enableScreens()
+enableFreeze()
+{{/if}}
+
+Text.defaultProps = Text.defaultProps || {
+  allowFontScaling: false
+}
+
+TextInput.defaultProps = TextInput.defaultProps || {
+  allowFontScaling: false,
+  autoCorrect: false,
+  spellCheck: false
+}
+LogBox.ignoreLogs(['Bridge was already shutdown.', 'Require cycle:'])
+
+registerRootComponent(App)

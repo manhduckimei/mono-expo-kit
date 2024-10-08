@@ -1,0 +1,90 @@
+import theme from '@theme'
+import React from 'react'
+import { StyleSheet, TextProps } from 'react-native'
+{{#if (eq props.utilsPackage.name "svg")}}
+import { Path, PathProps, Svg, SvgProps } from 'react-native-svg'
+
+export type Props = {
+  fill?: PathProps['fill']
+  style?: TextProps['style']
+  size?: keyof typeof sizes
+} & Omit<SvgProps, 'style' | 'size'>
+
+export const sizes = {
+  sm: 16,
+  md: 20,
+  lg: 24
+}
+
+export function useCommonSVGProps(props: Props) {
+  const { fill, size, ...rest } = props
+  const style = StyleSheet.flatten(rest.style)
+  const _fill = fill || style?.color || theme.colors.orange_500
+  const _size = Number(size ? sizes[size] : rest.width || sizes.md)
+
+  return {
+    fill: _fill,
+    size: _size,
+    style,
+    ...rest
+  }
+}
+
+export function createSinglePathSVG({
+  path,
+  hasViewBox = true
+}: {
+  path: string
+  hasViewBox?: boolean
+}) {
+  return React.forwardRef<Svg, Props>(function Logo(props, ref) {
+    const { fill, size, style, ...rest } = useCommonSVGProps(props)
+
+    return (
+      <Svg
+        {...rest}
+        ref={ref}
+        fill='none'
+        viewBox={hasViewBox ? '0 0 24 24' : undefined}
+        width={size}
+        height={size}
+        style={style}>
+        <Path fill={fill} fillRule='evenodd' clipRule='evenodd' d={path} />
+      </Svg>
+    )
+  })
+}
+
+export function createMutiplePathSvg({
+  paths,
+  hasViewBox = true
+}: {
+  paths: string[]
+  hasViewBox?: boolean
+}) {
+  return React.forwardRef<Svg, Props>(function Logo(props, ref) {
+    const { fill, size, style, ...rest } = useCommonSVGProps(props)
+
+    return (
+      <Svg
+        {...rest}
+        ref={ref}
+        fill='none'
+        viewBox={hasViewBox ? '0 0 24 24' : undefined}
+        width={size}
+        height={size}
+        style={style}>
+        {paths.map((path) => (
+          <Path
+            key={path}
+            fill={fill}
+            fillRule='evenodd'
+            clipRule='evenodd'
+            d={path}
+          />
+        ))}
+      </Svg>
+    )
+  })
+}
+{{/if}}

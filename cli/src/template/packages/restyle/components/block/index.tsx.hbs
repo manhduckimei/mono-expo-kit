@@ -1,0 +1,18 @@
+import { forwardRef, memo } from 'react'
+
+import { type Theme, createBox } from '@theme'
+import NativeView from 'react-native/Libraries/Components/View/ViewNativeComponent'
+
+export const ReView = createBox<Theme>(NativeView)
+
+export const Block = memo(
+  forwardRef<NativeView, React.ComponentProps<typeof ReView>>(
+    function Block(props, ref) {
+      return (
+        <ReView {...props} ref={ref}>
+          {props.children}
+        </ReView>
+      )
+    }
+  )
+)

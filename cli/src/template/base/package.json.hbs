@@ -1,0 +1,139 @@
+{
+    "name": "{{props.projectName}}",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+      {{#if props.flags.eas}}
+        "start": "EXPO_USE_FAST_RESOLVER=1 STAGE=development NODE_ENV=development npx expo",
+        "ios": "expo run:ios",
+        "android": "expo run:android",
+        "android:dev": "STAGE=development NODE_ENV=development expo run:android",
+        "ios:dev": "STAGE=development NODE_ENV=development expo run:ios",
+        "prebuild:development": "STAGE=development NODE_ENV=development npx expo prebuild",
+        "prebuild:development:window": "set NODE_ENV=development npm run prebuild",
+        "build:development:ios": "STAGE=development NODE_ENV=development eas build --profile development --platform ios && say done",
+        "build:development:android": "NODE_ENV=development eas build --profile development --platform android && say done",
+        "update:development": "eas update --branch development",
+        "depcheck": "npx depcheck"
+      {{else}}
+        "android": "expo start --android",
+        "ios": "expo start --ios",
+        "start": "expo start",
+      {{/if}}
+      "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
+      "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write"
+    },
+    "dependencies": {      
+      {{#if (eq props.utilsPackage.name "flashlist")}}
+        "@shopify/flash-list": "^1.7.1",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "bottom-sheet")}}
+          "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "react-query")}}
+        "@tanstack/react-query": "^5.48.0",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "axios")}}
+          "axios": "^1.7.2",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "dayjs")}}
+        "dayjs": "^1.11.12",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "svg")}}
+        "react-native-svg": "15.2.0",
+      {{/if}}
+
+      {{#if (eq props.utilsPackage.name "hookform")}}
+        "react-hook-form": "^7.53.0",
+        "zod": "^3.23.8",
+        "@hookform/resolvers": "^3.9.0",
+      {{/if}}
+  
+      {{#if (eq props.stylingPackage.name "restyle")}}
+        "@shopify/restyle": "^2.4.4",
+      {{/if}}
+  
+      {{#if (eq props.stylingPackage.name "unistyles")}}
+        "react-native-unistyles": "^2.10.0",
+      {{/if}}
+  
+      {{#if (eq props.navigationPackage.type "navigation")}}
+        "@react-navigation/native": "^6.1.7",
+        "react-native-gesture-handler": "~2.16.1",
+        "react-native-safe-area-context": "4.10.1",
+        "react-native-screens": "3.31.1",
+      {{/if}}
+
+      {{#if (eq props.navigationPackage.name "react-navigation")}}
+        "@react-navigation/stack": "^6.3.17",
+      {{/if}}
+  
+      {{#if (and (eq props.navigationPackage.options.type "tabs") (eq props.navigationPackage.name "react-navigation"))}}
+        "@react-navigation/bottom-tabs": "^6.5.8",
+      {{/if}}
+  
+      {{#if (and (eq props.navigationPackage.options.type "drawer + tabs") (eq props.navigationPackage.name "react-navigation"))}}
+        "@react-navigation/drawer": "^6.6.15",
+        "@react-navigation/bottom-tabs": "^6.5.8",
+      {{else if (eq props.navigationPackage.options.type "drawer + tabs")}}
+        "@react-navigation/drawer": "^6.6.15",
+        "@react-navigation/bottom-tabs": "^6.5.8",
+      {{/if}}
+  
+      {{#if (eq props.navigationPackage.name "expo-router")}}
+        "expo-linking": "~6.3.1",
+        "expo-router": "~3.5.14",  
+        "expo-system-ui": "~3.0.4",
+      {{/if}}
+  
+      {{#if (eq props.internalizationPackage.name "i18next")}}
+        "i18next": "^23.7.20",
+        "react-i18next": "^14.0.1",
+        "expo-localization": "~14.8.3",
+      {{/if}} 
+  
+      {{#if (or props.flags.eas)}}
+        "expo-dev-client": "~4.0.14",     
+      {{/if}}
+  
+      "expo": "~51.0.17",
+      "expo-status-bar": "~1.12.1",
+      "@expo/vector-icons": "^14.0.0",
+      "expo-splash-screen": "~0.27.5",
+      "expo-image": "~1.12.12",
+      "react": "18.2.0",
+      "react-native": "0.74.2",
+      "react-native-error-boundary": "^1.2.4",
+      "react-native-reanimated": "~3.13.0",
+    },
+    "devDependencies": {
+      {{#if (and (eq props.packageManager "bun") (eq props.navigationPackage.name "expo-router"))}}
+        "ajv": "^8.12.0",
+      {{/if}}
+      "@babel/core": "^7.20.0",
+      "@types/react": "~18.2.45",
+      "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+      "@typescript-eslint/eslint-plugin": "^7.7.0",
+      "@typescript-eslint/parser": "^7.7.0",
+      "eslint": "^8.57.0",
+      "eslint-plugin-react": "^7.33.0",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "eslint-plugin-unused-imports": "2.0.0",
+      "prettier": "^3.2.5",
+      "typescript": "~5.3.3"
+    },
+    {{#if (eq props.navigationPackage.type "navigation")}}
+    "expo": {
+      "install": {
+        "exclude": ["react-native-safe-area-context"]
+      }
+    },
+    {{/if}}
+    "private": true
+  }
+  

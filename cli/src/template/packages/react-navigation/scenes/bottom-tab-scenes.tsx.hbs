@@ -1,0 +1,39 @@
+import type {
+  BottomTabRoutes,
+  ScreenOptions,
+  TScreen
+} from '@navigation/config/types'
+import {
+  type BottomTabNavigationOptions,
+  createBottomTabNavigator
+} from '@react-navigation/bottom-tabs'
+
+const Tab = createBottomTabNavigator<BottomTabRoutes>()
+
+const BottomTabScenes = () => {
+  const screenOptions: ScreenOptions<
+    BottomTabRoutes,
+    BottomTabNavigationOptions
+  > = {
+    Home: {}
+  }
+
+  return (
+      <Tab.Navigator
+        screenOptions={{
+          tabBarAllowFontScaling: false,
+          headerShown: false
+        }}>
+        {bottomTabScreens.map(({ name, component }: TScreen) => (
+          <Tab.Screen
+            key={name}
+            name={name as keyof BottomTabRoutes}
+            component={component}
+            options={screenOptions[name]}
+          />
+        ))}
+      </Tab.Navigator>
+  )
+}
+
+export default BottomTabScenes

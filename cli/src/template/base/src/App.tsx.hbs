@@ -1,0 +1,57 @@
+import { useExpoUpdate } from '@hooks/use-expo-update'
+import MainNavigation from '@navigation/scenes'
+{{#if (eq props.stylingPackage.name "restyle")}}
+import { ThemeProvider } from '@shopify/restyle/dist/context'
+{{/if}}
+{{#if (eq props.utilsPackage.name "react-query")}}
+import { QueryClientProvider } from '@tanstack/react-query'
+{{/if}}
+import theme from '@theme'
+import ErrorBoundary from 'react-native-error-boundary'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import {
+  SafeAreaProvider,
+  initialWindowMetrics
+} from 'react-native-safe-area-context'
+
+{{#if (eq props.utilsPackage.name "react-query")}}
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      networkMode: 'online',
+      retry: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false
+    },
+    mutations: {
+      networkMode: 'online'
+    }
+  }
+})
+{{/if}}
+
+const App = () => {
+  //update early as soon as possible in the app
+  useExpoUpdate()
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <GestureHandlerRootView style={theme.layout.flex_1}>
+            {{#if (eq props.stylingPackage.name "restyle")}}
+            <ThemeProvider theme={theme}>
+                <MainNavigation />
+            </ThemeProvider>
+            {{else}}
+              <MainNavigation />
+            {{/if}}
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  )
+}
+
+export default App

@@ -1,0 +1,25 @@
+import { commonScreens, notLoggedInScreens } from '@navigation/config/routes'
+import { type RootStackRoutes, screenOptions } from '@navigation/config/types'
+import { createStackNavigator } from '@react-navigation/stack'
+
+const { Navigator, Group, Screen } = createStackNavigator<RootStackRoutes>()
+
+export const RootScenes = () => {
+  return (
+    <Navigator>
+      <Group>
+        {Object.entries({
+          ...commonScreens,
+          ...notLoggedInScreens
+        }).map(([name, component]: [string, unknown]) => (
+          <Screen
+            key={name}
+            name={name as keyof RootStackRoutes}
+            component={component as () => JSX.Element}
+            options={screenOptions[name]}
+          />
+        ))}
+      </Group>
+    </Navigator>
+  )
+}

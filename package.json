@@ -1,0 +1,55 @@
+{
+  "name": "create-expo-kit",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Root package for the create-expo-cli monorepo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kimei-Global-Co/create-expo-kit.git"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "cli/*",
+    "docs/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "build:cli": "turbo build --filter create-expo-kit",
+    "build:docs": "turbo build --filter create-expo-kit-docs",
+    "prepare": "husky install"
+  },
+  "prettier": {
+    "bracketSameLine": true,
+    "singleQuote": true,
+    "semi": false,
+    "tabWidth": 2,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "jsxBracketSameLine": false,
+    "insertPragma": false,
+    "jsxSingleQuote": true,
+    "printWidth": 80,
+    "proseWrap": "preserve",
+    "quoteProps": "as-needed",
+    "requirePragma": false,
+    "trailingComma": "none",
+    "useTabs": false
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "bun-types": "^1.0.14",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^5.1.3",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.1.0",
+    "turbo": "^2.1.3",
+    "typescript": "latest"
+  },
+  "packageManager": "bun@1.1.29",
+  "dependencies": {
+    "expo": "latest"
+  }
+}

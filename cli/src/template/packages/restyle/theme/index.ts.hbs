@@ -1,0 +1,97 @@
+/* eslint-disable no-unused-vars */
+import type { ImageStyle, TextStyle, ViewStyle } from 'react-native'
+
+import { DefaultTheme } from '@react-navigation/native'
+import { createTheme, useTheme as useRestyleTheme } from '@shopify/restyle'
+
+import Colors from './colors'
+import Fonts from './fonts'
+import { Layout, Spacing } from './layout'
+
+export {
+  ThemeProvider,
+  createBox,
+  createRestyleComponent,
+  createText,
+  createTheme,
+  createVariant
+} from '@shopify/restyle'
+
+export const theme = createTheme({
+  colors: {
+    ...Colors
+  },
+  spacing: {
+    ...Spacing
+  },
+  breakpoints: {
+    phone: 0,
+    tablet: 768
+  },
+  textVariants: {
+    ...Fonts
+  },
+  cardVariants: {
+    defaults: {},
+    primary: {
+      backgroundColor: 'orange_500'
+    },
+    secondary: {
+      backgroundColor: 'cardSecondaryBackground'
+    }
+  },
+  borderRadii: {
+    none: 0,
+    xxs: 2,
+    xs: 4,
+    s: 6,
+    m: 8,
+    l: 10,
+    _14: 14,
+    _28: 28,
+    xl: 33,
+    xxl: 40,
+    _3xl: 50,
+    full: 99999
+  },
+  zIndices: {
+    _1: 1,
+    full: 9999
+  },
+  layout: {
+    ...Layout
+  }
+})
+type NamedStyles<T> = {
+  [P in keyof T]: ViewStyle | TextStyle | ImageStyle
+}
+
+export const darkTheme: Theme = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    background: Colors.black,
+    container: Colors.text
+  }
+}
+export const navigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    ...theme.colors
+  }
+}
+
+export const makeStyles = <T extends NamedStyles<T> | NamedStyles<unknown>>(
+  styles: (theme: Theme) => T
+) => {
+  return () => styles(theme)
+}
+
+export const useTheme = () => {
+  return useRestyleTheme<Theme>()
+}
+
+export type Theme = typeof theme
+
+export default theme
