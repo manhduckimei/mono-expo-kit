@@ -1,29 +1,58 @@
-use serde::Serialize;
+pub(crate) type ObjectType = std::collections::HashMap<String, String>;
 
 // Component data structure for Handlebars
 #[derive(Serialize)]
-pub struct ComponentData {
-    pub name: String,
+pub struct CliResults {
+    pub project_name: String,
+    pub packages: Vec<Package>,
+    pub flags: Option<ObjectType>,
 }
 
-// Handlebars template for the component
-pub const COMPONENT_TEMPLATE: &str = r#"import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+use std::default::Default;
 
-export default function {{name}}() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{{name}}</Text>
-    </View>
-  )
+use serde::Serialize;
+
+impl Default for CliResults {
+    fn default() -> Self {
+        CliResults {
+            project_name: String::new(),
+            packages: Vec::new(),
+            flags: None,
+        }
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  text: {
-    fontSize: 20
-  }
-})
+pub const KIMEI: &str = r#"
+
+██╗  ██╗██╗███╗   ███╗███████╗██╗                 
+██║ ██╔╝██║████╗ ████║██╔════╝██║                 
+█████╔╝ ██║██╔████╔██║█████╗  ██║                 
+██╔═██╗ ██║██║╚██╔╝██║██╔══╝  ██║                 
+██║  ██╗██║██║ ╚═╝ ██║███████╗██║                 
+╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝                 
+ ██████╗ ██╗      ██████╗ ██████╗  █████╗ ██╗     
+██╔════╝ ██║     ██╔═══██╗██╔══██╗██╔══██╗██║     
+██║  ███╗██║     ██║   ██║██████╔╝███████║██║     
+██║   ██║██║     ██║   ██║██╔══██╗██╔══██║██║     
+╚██████╔╝███████╗╚██████╔╝██████╔╝██║  ██║███████╗
+ ╚═════╝ ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+ 
 "#;
+
+pub const PROJECT_NAME: &str = "my-expo-app";
+#[derive(Serialize)]
+pub struct Package {
+    name: String,
+    package_type: String,
+    options: serde_json::Value,
+}
+
+impl Package {
+    pub fn new(name: String, package_type: String, options: serde_json::Value) -> Self {
+        Package {
+            name,
+            package_type,
+            options,
+        }
+    }
+}

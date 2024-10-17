@@ -1,66 +1,30 @@
-use fs_extra::dir::create_all;
-use handlebars::Handlebars;
-use std::env;
-use std::fs;
-use std::io::{self, Write};
+use expo_kit_cli::{themes::THEME, *};
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    clear_screen()?;
+    let current_dir = env::current_dir()?;
 
-mod constants;
-use constants::{ComponentData, COMPONENT_TEMPLATE};
+    let mut cli_results = CliResults::default();
 
-fn main() {
-    // Get project directory
-    let current_dir = env::current_dir().expect("Unable to get current directory");
-    let project_name = get_user_input("Enter the project name: ");
-    let component_name = get_user_input("Enter the component name: ");
-    println!("current_dir: {}", current_dir.display());
-    // Create project directory
-    let project_dir = current_dir.join(&project_name);
-    create_all(&project_dir, true).expect("Failed to create project directory");
+    let config_text = THEME
+        .lock()
+        .unwrap()
+        .format_confirm("Your project configuration\n");
 
-    // Create src/components directory
-    let components_dir = project_dir.join("src/components");
-    create_all(&components_dir, true).expect("Failed to create components directory");
+    render_logo();
 
-    // // Load the component.hbs template
-    // let template_content =
-    //     fs::read_to_string("../template/base/component.hbs").expect("Failed to read template file");
+    set_project_name(&mut cli_results);
 
-    // Initialize handlebars
-    let mut handlebars = Handlebars::new();
+    let _ = check_language_arg();
 
-    // Register the template
-    handlebars
-        .register_template_string("component", COMPONENT_TEMPLATE)
-        .expect("Failed to register template");
+    set_package_manager(&mut cli_results);
 
-    // Create data for the template
-    let data = ComponentData {
-        name: component_name.clone(),
-    };
+    set_navigation(&mut cli_results);
 
-    // Render the component template
-    let rendered = handlebars
-        .render("component", &data)
-        .expect("Failed to render template");
+    let project_dir = current_dir.join(cli_results.project_name.clone());
 
-    // Write the generated component to the project directory
-    let component_file_path = components_dir.join(format!("{}.tsx", component_name));
-    fs::write(component_file_path, rendered).expect("Failed to write component file");
+    create_all(&project_dir, true)?;
 
-    println!(
-        "React Native project '{}' initialized successfully.",
-        project_name
-    );
-}
+    pretty_json(cli_results, config_text)?;
 
-fn get_user_input(prompt: &str) -> String {
-    print!("{}", prompt);
-    io::stdout().flush().unwrap();
-
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read input");
-
-    input.trim().to_string()
+    Ok(())
 }
