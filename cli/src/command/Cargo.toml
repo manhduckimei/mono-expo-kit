@@ -1,14 +1,15 @@
 [package]
-name = "expo-kit-cli"
+name = "ekc"
 version = "0.1.0"
 edition = "2021"
+readme = "README.md"
 
 [dependencies]
-handlebars = "4.3.2"
-serde = { version = "1.0", features = ["derive"] }
-fs_extra = "1.2"
-clap = "4.5.19"
-inquire = "0.7.5"
-serde_json = "1.0.128"
-console = "0.15.8"
-once_cell = "1.20.2"
+handlebars = { workspace = true }
+serde = { workspace = true }
+fs_extra = { workspace = true }
+clap = { workspace = true }
+inquire = { workspace = true }
+serde_json = { workspace = true }
+console = { workspace = true }
+once_cell = { workspace = true }

@@ -3,13 +3,13 @@ use inquire::Confirm;
 
 fn set_language() -> Result<bool, String> {
     println!();
-    let use_typescript = Confirm::new("Would you like to use TypeScript? (Default: Yes)")
+    let use_typescript: bool = Confirm::new("Would you like to use TypeScript? (Default: Yes)")
         .with_default(true)
         .prompt()
         .map_err(|_| "Error! Please try again later.")?;
 
     // Lock the theme only for the output, reducing the duration of the lock
-    let theme_message = if use_typescript {
+    let theme_message: &str = if use_typescript {
         "Cool! Your project is now using TypeScript."
     } else {
         "No problem! Your project is now using JavaScript."

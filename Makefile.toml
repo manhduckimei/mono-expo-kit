@@ -1,0 +1,19 @@
+[config]
+default_to_workspace = false
+
+[tasks.changelog]
+install_crate = "git-cliff"
+
+command = "bash"
+args = [
+    "-c", "git-cliff -c cliff.toml --prepend CHANGELOG.md -u --tag ${@} -r $(git rev-parse --show-toplevel)/.git"
+]
+
+[tasks.readmes]
+install_crate = "cargo-readme"
+command = "cargo"
+args = ["readme", "-o", "README.md"]
+
+
+[tasks.prerelease]
+dependencies = ["changelog","readmes"]

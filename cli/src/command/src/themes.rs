@@ -4,9 +4,8 @@ use std::sync::Mutex;
 
 use crate::constants::KIMEI;
 
-
 pub trait Theme {
-     fn logo_color(&self) -> String {
+    fn logo_color(&self) -> String {
         format!("{}", Style::new().cyan().apply_to(KIMEI))
     }
     fn format_confirm(&self, title: &str) -> String {
